@@ -5,64 +5,70 @@
 #include "piezo.h"
 #include "dome.h"
 #include "led.h"
-#include "ps2x.h"
 #include "knock.h"
-//#include "cognition.h"
-//#include "action.h"
+#include "tof.h"
+#include "radar.h"
 
-//#define TEST
+#include "packet.h"
+
+#define TEST
 
 #ifdef TEST
-int testModule=4;
+int testModule = 8;
 void testsuite()
 {
   // Initialize the Serial interface:
 
-  if(testModule==1)
+  if (testModule == 1)
   {
     testMotors();
-    return;    
-  }
-  else if(testModule==2)
-  {
-    domeMotorTest();
-    //domeEncoderTest();
     return;
   }
-  else if(testModule==3)
+  else if (testModule == 2)
   {
-      squeak();
-      delay(500);
-      catcall();
-      delay(500);
-      ohhh();
-      delay(500);
-      laugh();
-      delay(500);
-      closeEncounters();
-      delay(500);
-      laugh2);
-      delay(500);
-      waka();
-      delay(500);  
-      r2D2();
-      delay(500);
-      ariel();
-      delay(3000);
+    //Serial.println("Dome test\n");
+    domeMotorTest();
+    //domeEncoderTest();
+    //return;
   }
-  else if(testModule==4)
+  else if (testModule == 3)
   {
-    testLed();    
+    squeak();
+    delay(500);
+    catcall();
+    delay(500);
+    ohhh();
+    delay(500);
+    laugh();
+    delay(500);
+    closeEncounters();
+    delay(500);
+    laugh();
+    delay(500);
+    waka();
+    delay(500);
+    r2D2();
+    delay(500);
+    ariel();
+    delay(3000);
   }
-  else if(testModule==5)
+  else if (testModule == 4)
   {
-    //Serial.println("ps2 test"); 
-    testPS2X();    
-  } 
-  else if(testModule==6)
+    testLed();
+  }
+  else if (testModule == 6)
   {
-    testKnock();    
-  }     
+    testKnock();
+  }
+  else if (testModule == 7)
+  {
+    testToF();
+  }
+
+  else if (testModule == 8)
+  {
+    testRadar();
+  }  
 }
 #endif
 
@@ -73,34 +79,30 @@ void testsuite()
 #define DEBUG_RATE 5
 
 
-dataPS2X dataps2x;
-byte ledCmd=0;
-byte ledRate=30;
+byte ledCmd = 0;
+byte ledRate = 30;
+
+int16_t tofdistance;
+byte radar;
+byte knock;
+byte mic;
 
 void setup(void)
 {
   Serial.begin(115200);      //Set Baud Rate
   printf_begin();
   Serial.println("Init Started");
+#ifndef TEST
+  initDome();
+#endif  
   initMotors();
   initPiezo();
-  initDome();
+  
   initLed();
-  initPS2X();
-  Serial.println("Init Completed");  
+  initToF();
+  initRadar();
+  Serial.println("Init Completed");
 
-  static bool isStart = false;
-  while(1)
-  {
-    dataps2x = readPS2X(dataps2x);
-    if (dataps2x.start)
-    {
-      laugh();
-      ledCmd = 1;
-      break;
-    }
-    delay(500);
-  }
 }
 
 
@@ -113,50 +115,33 @@ void loop() {
   static unsigned long prev_sensor_time = 0;
   static unsigned long prev_command_time = 0;
   static unsigned long prev_led_time = 0;
-  
-  
+
+
   if ((millis() - prev_sensor_time) >= (1000 / SENSOR_RATE))
   {
-      dataps2x = readPS2X(dataps2x);
-      if( checkKnock() )
-      {
-        
-        
-        
-      }
-      prev_sensor_time = millis();
+    tofdistance = measureToF();
+    radar = checkRadar();
+    knock = 0;mic = 0;
+    prepareStatusBuf(tofdistance,radar,knock,mic);
+    Serial.write(statusBuf,sizeof(statusBuf));
   }
-
-
 
   if ((millis() - prev_command_time) >= (1000 / COMMAND_RATE))
   {
-      if(dataps2x.square) domeSetPosHome(3);
-      if(dataps2x.circle) domeSetPosHome(-3);
-      if(dataps2x.cross) domeSetPosHome(0);
-    
-    
-      if(dataps2x.left) moveLeft();
-      else if(dataps2x.right) moveRight();
-      else if(dataps2x.up) moveForward();
-      else if(dataps2x.down) moveBackward();
-      else moveStop();
-      prev_command_time = millis();
+    domeSetPosHome(3);
+    prev_command_time = millis();
   }
 
   if ((millis() - prev_led_time) >= (1000 / ledRate))
   {
-      if(ledCmd>0)
-      {
-        showLed(prev_led_time%256,(255-prev_led_time%256));
-      }
-      prev_led_time = millis();
+    if (ledCmd > 0)
+    {
+      showLed(prev_led_time % 256, (255 - prev_led_time % 256));
+    }
+    prev_led_time = millis();
   }
-  
-  
 
-#endif  
+
+
+#endif
 }
-
-
-

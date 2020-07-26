@@ -1,0 +1,4 @@
+categories: [command]
+conversations:
+- ['앞으로', ';@moveforward();성공']
+

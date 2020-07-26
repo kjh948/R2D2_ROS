@@ -1,14 +1,16 @@
 
 #include <AFMotor.h>
 
-AF_DCMotor motorDome(3, MOTOR34_64KHZ);
+AF_DCMotor motorDome(1, MOTOR12_64KHZ);
 
-int motorSpeedDome = 200;//changed to 5V for motor power
+int motorSpeedDome = 100;
+
+#define MAX_TICK 30
 
 enum PinAssignments {
   encoderPinA = 19,
   encoderPinB = 18,
-  clearButton = 17
+  clearButton = 20
 };
 
 volatile int encoderPos = 0;
@@ -36,9 +38,9 @@ void doEncoderB(){
 void enableDomeEncoder()
 {
 // encoder pin on interrupt 0 (pin 19)
-  attachInterrupt(digitalPinToInterrupt(encoderPinA), doEncoderA, CHANGE);
+  attachInterrupt(4, doEncoderA, CHANGE);
 // encoder pin on interrupt 1 (pin 18)
-  attachInterrupt(digitalPinToInterrupt(encoderPinB), doEncoderB, CHANGE);
+  attachInterrupt(5, doEncoderB, CHANGE);
 }
 void disableDomeEncoder()
 {
@@ -186,3 +188,6 @@ void initDome()
   domeHoming();
   //disableDomeEncoder();
 }
+
+
+

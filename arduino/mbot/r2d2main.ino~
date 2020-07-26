@@ -1,0 +1,78 @@
+#import <Arduino.h>
+
+
+//#include <PinChangeInt.h>
+#include "motor.h"
+#include "piezo.h"
+//#include "utils.h"
+#include "dome.h"
+//#include "radio.h"
+#include "rc.h"
+
+int testModule=4;
+
+
+
+void setup(void)
+{
+  Serial.begin(115200);      //Set Baud Rate
+  
+  Serial.println("Init Started");
+  initMotors();
+  initPiezo();
+  initDome();
+  initRC();
+  Serial.println("Init Completed");  
+  
+  
+}
+
+void loop() {
+
+  // Initialize the Serial interface:
+
+  if(testModule==1)
+  {
+    testMotors();
+    return;    
+  }
+  else if(testModule==2)
+  {
+    domeMotorTest();
+    return;
+  }
+  else if(testModule==3)
+  {
+      squeak();
+      delay(500);
+      catcall();
+      delay(500);
+      ohhh();
+      delay(500);
+      laugh();
+      delay(500);
+      closeEncounters();
+      delay(500);
+      laugh2();
+      delay(500);
+      waka();
+      delay(500);  
+      r2D2();
+      delay(500);
+      ariel();
+      delay(3000);
+  }
+  else if(testModule==4)
+  {
+    testRadio();    
+  }
+
+  //Read RC value
+  //rc_process_channels();
+  //rc_values[2]: foward/backward
+  //rc_values[0]: left/right
+  
+}
+
+
+

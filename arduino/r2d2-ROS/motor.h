@@ -2,11 +2,11 @@
 
 #include <AFMotor.h>
 
-AF_DCMotor motorR(2, MOTOR12_64KHZ);
-AF_DCMotor motorL(1, MOTOR12_64KHZ);
+AF_DCMotor motorR(3, MOTOR34_64KHZ);
+AF_DCMotor motorL(4, MOTOR34_64KHZ);
 
 
-int motorSpeed = 230;//96;//changed to 5V for motor power
+int motorSpeed = 96;
 
 
 
