@@ -18,7 +18,7 @@ Features
 
 
 
-Pre-requite
+Prerequisite
  . sox and sox mp3 extension
  . libc5.0 support for ubuntu 14.04
  . portaudio
