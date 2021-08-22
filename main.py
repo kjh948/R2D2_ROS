@@ -25,6 +25,8 @@ robot = r2d2Robot()
 
 
 def process_utterance():
+    print('#####################detected')
+    
     detector.interrupted = True
     isTriggered = False
     utt = asr.get_asr()

@@ -9,6 +9,7 @@ import signal
 import os
 import collections
 import time
+from multiprocessing import Process
 
 from asr import r2d2Asr
 from tts import r2d2Tts
@@ -19,7 +20,7 @@ from robot import r2d2Robot
 SCORE_THRE = 0.6
 
 asr = r2d2Asr(ambient=False)
-tts = r2d2Tts()
+tts = r2d2Tts(engine='')
 brain = r2d2Bot()
 robot = r2d2Robot()
 

@@ -14,7 +14,7 @@
 #define TEST
 
 #ifdef TEST
-int testModule = 8;
+int testModule = 7;
 void testsuite()
 {
   // Initialize the Serial interface:
@@ -27,8 +27,8 @@ void testsuite()
   else if (testModule == 2)
   {
     //Serial.println("Dome test\n");
-    domeMotorTest();
-    //domeEncoderTest();
+    //domeMotorTest();
+    domeEncoderTest();
     //return;
   }
   else if (testModule == 3)
@@ -92,7 +92,9 @@ void setup(void)
   Serial.begin(115200);      //Set Baud Rate
   printf_begin();
   Serial.println("Init Started");
-#ifndef TEST
+#ifdef TEST
+  if(testModule==2) initDome();
+#else
   initDome();
 #endif  
   initMotors();

@@ -17,5 +17,5 @@ void testRadar(void)
 {
     if(checkRadar()) Serial.println("Radar Detected");
     else Serial.println("Not Detected");
-    delay(100);  
+    delay(10);  
 }

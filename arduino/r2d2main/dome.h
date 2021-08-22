@@ -3,7 +3,7 @@
 
 AF_DCMotor motorDome(3, MOTOR34_64KHZ);
 
-int motorSpeedDome = 200;//changed to 5V for motor power
+int motorSpeedDome = 64;//changed to 5V for motor power
 
 enum PinAssignments {
   encoderPinA = 19,
@@ -135,12 +135,12 @@ void domeHoming()
 
 void domeMotorTest()
 {
-  domeSetPosHome(3);
+  domeSetPosHome(10);
   delay(1000);
-  domeSetPosHome(-3);
+  domeSetPosHome(-10);
   delay(1000);
-  domeSetPosHome(5);
-  delay(1000);
+  //domeSetPosHome(5);
+  //delay(100);
   //domeHoming();
   /*if (Serial.available() > 0) {
     int pos = Serial.read();
